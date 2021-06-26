@@ -21,6 +21,7 @@ exports.getAllItems = catchAsync(async (req, res, next) => {
     // Send responce
     res.status(200).json({
       status: 'success',
+      allItems: 90,
       results: items.length,
       data: {
         items,
