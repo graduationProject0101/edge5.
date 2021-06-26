@@ -4,10 +4,13 @@ const mongoose = require('mongoose');
 var cartSchema = new mongoose.Schema({
     owner: {type: mongoose.Schema.Types.ObjectID, ref: 'User'},
     items: [{
-        item: {type: mongoose.Schema.Types.ObjectID, ref: 'Product'},
+        itemId: {type: mongoose.Schema.Types.ObjectID, ref: 'Product'},
         qty: {type: Number, default: 1},
         price: {type: Number, default: 0},
-        images:{type:Array}
+        images:{type:String},
+        color:{type:String},
+        size:{type:String},
+        seller:{type:String}
     }]})
 
 

@@ -8,6 +8,8 @@ router.route('/')
 .post(cartController.createCartItem)
 .delete(cartController.deleteCartItem);
 
+router.route('/qty').get(cartController.getQuantity);
+
 
 
 module.exports = router;

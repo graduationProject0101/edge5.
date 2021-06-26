@@ -13,7 +13,7 @@ exports.createCartItem = catchAsync(async (req, res) => {
       console.log("msc")
       let updateCart = await Cart.findOneAndUpdate({owner:req.body.owner},
         {$push: {items: req.body.items}}
-        )
+        );
         res.status(200).json({
           status: 'success',
           data: {
@@ -48,7 +48,7 @@ exports.getCart = catchAsync(async(req,res)=>{
       status:'success',
       data:{
         totalPrice: totalPrice,
-        items:cart
+        items:cart.items
       }
     }
   
@@ -56,15 +56,31 @@ exports.getCart = catchAsync(async(req,res)=>{
   
 })
 
+exports.getQuantity = catchAsync(async (req,res)=>{
+  const cart = await Cart.findOne({owner:req.body.owner});
+  const qty = cart.items.length;
+  res.status(200).json({
+    status:'success',
+    quantity: qty
+  })
+})
+
+
+
+
+
+
+
+
 exports.deleteCartItem = catchAsync(async(req,res)=>{
-  const cart = await Cart.findOneAndDelete({owner:req.body.owner});
-  if (!cart) {
-    return next(new AppError('No item found with that ID', 404));
-  }
+  let updateCart = await Cart.findOneAndUpdate({owner:req.body.owner},
+    {$pull: {items:{itemId:req.body.itemId}}}
+    );
+  console.log(updateCart);
 
   res.status(204).json({
     status: 'success',
-    data: null,
+    data: updateCart,
   });
 
 });
