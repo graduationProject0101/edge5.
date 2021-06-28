@@ -6,7 +6,7 @@ const globalErrorHandler = require('./controllers/errorController');
 const itemRouter = require('./routes/itemRoutes');
 const userRouter = require('./routes/userRoutes');
 const cartRouter = require('./routes/cartRoutes');
-
+const cors = require('cors');
 const app = express();
 
 // 1) MIDDLEWARES
