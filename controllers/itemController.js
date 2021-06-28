@@ -11,23 +11,21 @@ exports.aliasSales = (req, res, next) => {
 
 exports.getAllItems = catchAsync(async (req, res, next) => {
   // Execute the query after creating it in the above lines
-  const features = new APIFeatures(Item.find(), req.query)
-    .filter()
-    .sort()
-    .paginate();
+  const features1 = new APIFeatures(Item.find(), req.query).filter().sort();
+  const features2 = new APIFeatures(Item.find(), req.query).paginate();
 
-  const items = await features.query;
-  ~(
-    // Send responce
-    res.status(200).json({
-      status: 'success',
-      allItems: 90,
-      results: items.length,
-      data: {
-        items,
-      },
-    })
-  );
+  const allItems = await features1.query;
+  const paginatedItems = await features2.query;
+
+  // Send responce
+  res.status(200).json({
+    status: 'success',
+    allItems: allItems.length,
+    results: paginatedItems.length,
+    data: {
+      paginatedItems,
+    },
+  });
 });
 
 exports.getItem = catchAsync(async (req, res, next) => {
