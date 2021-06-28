@@ -5,7 +5,7 @@ const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 const itemRouter = require('./routes/itemRoutes');
 const userRouter = require('./routes/userRoutes');
-const cartRouter = require('./routes/cartRoutes')
+const cartRouter = require('./routes/cartRoutes');
 
 const app = express();
 
@@ -34,6 +34,11 @@ app.use((req, res, next) => {
 });
 
 app.use(compression());
+app.use(
+  cors({
+    origin: '*',
+  })
+);
 
 // 2) Routes
 app.use('/api/v1/items', itemRouter);
