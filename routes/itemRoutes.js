@@ -17,6 +17,10 @@ router
   .get(itemController.getAllItems)
   .post(itemController.createItem);
 
+router.route('/filter').get(itemController.filterItems);
+
+router.route('/paginate').get(itemController.paginateItems);
+
 router
   .route('/:id')
   .get(itemController.getItem)

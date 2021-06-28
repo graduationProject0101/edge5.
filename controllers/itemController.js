@@ -11,21 +11,58 @@ exports.aliasSales = (req, res, next) => {
 
 exports.getAllItems = catchAsync(async (req, res, next) => {
   // Execute the query after creating it in the above lines
-  const features1 = new APIFeatures(Item.find(), req.query).filter().sort();
-  const features2 = new APIFeatures(Item.find(), req.query).paginate();
+  const features1 = new APIFeatures(Item.find(), req.query);
 
   const allItems = await features1.query;
-  const paginatedItems = await features2.query;
 
   // Send responce
   res.status(200).json({
     status: 'success',
-    allItems: allItems.length,
-    results: paginatedItems.length,
+    results: allItems.length,
     data: {
-      paginatedItems,
+      allItems,
     },
   });
+});
+
+exports.filterItems = catchAsync(async (req, res) => {
+  const features = new APIFeatures(Item.find(), req.query).filter().sort();
+  const filteredItems = await features.query;
+
+  res.status(200).json({
+    status: 'success',
+    results: filteredItems.length,
+    data: {
+      filteredItems,
+    },
+  });
+});
+
+exports.paginateItems = catchAsync(async (req, res) => {
+  const features1 = new APIFeatures(Item.find(), req.query).filter().sort();
+  const features2 = new APIFeatures(Item.find(), req.query).paginate();
+
+  const filteredItems = await features1.query;
+  const paginatedItems = await features2.query;
+
+  if (filteredItems.length != 90) {
+    res.status(200).json({
+      status: 'success',
+      results: filteredItems.length,
+      true: paginatedItems.length,
+      data: {
+        paginatedItems,
+      },
+    });
+  } else {
+    res.status(200).json({
+      status: 'success',
+      results: paginatedItems.length,
+      data: {
+        paginatedItems,
+      },
+    });
+  }
 });
 
 exports.getItem = catchAsync(async (req, res, next) => {
