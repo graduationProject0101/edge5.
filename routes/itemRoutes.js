@@ -17,7 +17,7 @@ router
   .get(itemController.getAllItems)
   .post(itemController.createItem);
 
-router.route('/filter').get(itemController.filterItems);
+router.route('/filter').post(itemController.filterItems);
 
 router.route('/paginate').get(itemController.paginateItems);
 

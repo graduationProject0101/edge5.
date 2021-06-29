@@ -2,7 +2,7 @@ const Item = require('./../models/itemModel');
 const APIFeatures = require('./../utils/apiFeatures');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
-
+const akin = require('@asymmetrik/akin');
 // aliasing but not yet uset //TODO:
 exports.aliasSales = (req, res, next) => {
   req.query.sort = 'discount';
@@ -29,6 +29,12 @@ exports.filterItems = catchAsync(async (req, res) => {
   const features = new APIFeatures(Item.find(), req.query).filter().sort();
   const filteredItems = await features.query;
 
+  if (filteredItems.length == 1) {
+    const MetaData = req.body.MetaData;
+    akin.activity.log(req.body.owner, filteredItems[0]._id, MetaData, 'view');
+    akin, akin.run();
+  }
+
   res.status(200).json({
     status: 'success',
     results: filteredItems.length,
@@ -40,10 +46,9 @@ exports.filterItems = catchAsync(async (req, res) => {
 
 exports.paginateItems = catchAsync(async (req, res) => {
   const features1 = new APIFeatures(Item.find(), req.query).filter().sort();
-  const features2 = new APIFeatures(Item.find(), req.query).paginate();
 
   const filteredItems = await features1.query;
-  const paginatedItems = await features2.query;
+  const paginatedItems = await features1.paginate().query;
 
   if (filteredItems.length != 90) {
     res.status(200).json({
