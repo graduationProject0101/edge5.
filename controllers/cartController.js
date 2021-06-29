@@ -46,18 +46,21 @@ exports.createCartItem = catchAsync(async (req, res) => {
 });
 
 exports.getCart = catchAsync(async (req, res, next) => {
-  const cart = await Cart.findOne({ owner: req.body.owner });
+  const features = new APIFeatures(Cart.findOne(), req.query).filter();
+  const cart = await features.query;
+  const len = cart[0].items.length;
+  //const cart = await Cart.findOne({ owner: req.params.owner });
   if (cart) {
     let totalPrice = 0;
-    for (let i = 0; i < cart.items.length; i++) {
-      totalPrice += cart.items[i].price * cart.items[i].qty;
+    for (let i = 0; i < len; i++) {
+      totalPrice += cart[0].items[i].price * cart[0].items[i].qty;
     }
 
     res.status(200).json({
       status: 'success',
       data: {
         totalPrice: totalPrice,
-        items: cart.items,
+        items: cart[0].items,
       },
     });
   } else {
@@ -66,9 +69,12 @@ exports.getCart = catchAsync(async (req, res, next) => {
 });
 
 exports.getQuantity = catchAsync(async (req, res, next) => {
-  const cart = await Cart.findOne({ owner: req.body.owner });
+  const features = new APIFeatures(Cart.find(), req.query).filter();
+  const cart = await features.query;
+  //const cart = await Cart.findOne({ owner: req.body.owner });
+
   if (cart) {
-    const qty = cart.items.length;
+    const qty = cart[0].items.length;
     res.status(200).json({
       status: 'success',
       quantity: qty,
