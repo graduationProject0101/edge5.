@@ -3,6 +3,7 @@ const User = require('./../models/userModel');
 const catchAsync = require('./../utils/catchAsync');
 const jwt = require('jsonwebtoken');
 const AppError = require('./../utils/appError');
+const Cart = require('./../models/cartModel');
 
 // assigning a token to user
 const asignToken = (id) => {
@@ -19,6 +20,11 @@ exports.signup = catchAsync(async (req, res, next) => {
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
     passwordChangedAt: req.body.passwordChangedAt,
+  });
+
+  const newCart = await Cart.create({
+    owner: newUser._id,
+    items: [],
   });
   const token = asignToken(newUser._id);
 
