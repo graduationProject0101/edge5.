@@ -45,29 +45,37 @@ exports.createCartItem = catchAsync(async (req, res) => {
   }
 });
 
-exports.getCart = catchAsync(async (req, res) => {
+exports.getCart = catchAsync(async (req, res, next) => {
   const cart = await Cart.findOne({ owner: req.body.owner });
-  let totalPrice = 0;
-  for (let i = 0; i < cart.items.length; i++) {
-    totalPrice += cart.items[i].price;
-  }
+  if (cart) {
+    let totalPrice = 0;
+    for (let i = 0; i < cart.items.length; i++) {
+      totalPrice += cart.items[i].price * cart.items[i].qty;
+    }
 
-  res.status(200).json({
-    status: 'success',
-    data: {
-      totalPrice: totalPrice,
-      items: cart.items,
-    },
-  });
+    res.status(200).json({
+      status: 'success',
+      data: {
+        totalPrice: totalPrice,
+        items: cart.items,
+      },
+    });
+  } else {
+    return next(new AppError('this user has an empty cart', 404));
+  }
 });
 
-exports.getQuantity = catchAsync(async (req, res) => {
+exports.getQuantity = catchAsync(async (req, res, next) => {
   const cart = await Cart.findOne({ owner: req.body.owner });
-  const qty = cart.items.length;
-  res.status(200).json({
-    status: 'success',
-    quantity: qty,
-  });
+  if (cart) {
+    const qty = cart.items.length;
+    res.status(200).json({
+      status: 'success',
+      quantity: qty,
+    });
+  } else {
+    return next(new AppError('this user has an empty cart'));
+  }
 });
 
 exports.deleteCartItem = catchAsync(async (req, res) => {

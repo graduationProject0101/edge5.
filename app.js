@@ -6,6 +6,8 @@ const globalErrorHandler = require('./controllers/errorController');
 const itemRouter = require('./routes/itemRoutes');
 const userRouter = require('./routes/userRoutes');
 const cartRouter = require('./routes/cartRoutes');
+const akinRouter = require('./routes/akinRoutes');
+const orderRouter = require('./routes/orderRoutes');
 const cors = require('cors');
 const app = express();
 
@@ -13,6 +15,12 @@ const app = express();
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
+
+app.use(
+  cors({
+    origin: '*',
+  })
+);
 
 app.use(function (req, res, next) {
   //Enabling CORS
@@ -34,16 +42,13 @@ app.use((req, res, next) => {
 });
 
 app.use(compression());
-app.use(
-  cors({
-    origin: '*',
-  })
-);
 
 // 2) Routes
 app.use('/api/v1/items', itemRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/cart', cartRouter);
+app.use('/api/v1/akin', akinRouter);
+app.use('/api/v1/order', orderRouter);
 
 // error handling if the url is not defined
 app.all('*', (req, res, next) => {

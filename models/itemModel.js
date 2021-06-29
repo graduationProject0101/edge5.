@@ -41,12 +41,12 @@ const itemSchema = new mongoose.Schema({
     type: Array,
     required: true,
   },
-  subCategory:{
-    type:String,
-    required:true,
-  }
+  subCategory: {
+    type: String,
+    required: true,
+  },
 });
-
+itemSchema.index({ '$**': 'text' });
 const Item = mongoose.model('Item', itemSchema);
 
 module.exports = Item;
