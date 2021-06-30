@@ -6,7 +6,6 @@ const akin = require('@asymmetrik/akin');
 const Cart = require('./../models/cartModel');
 
 exports.postOrder = catchAsync(async (req, res, next) => {
-  console.log(orderDate);
   let flag = true;
   const orderCheck = await Order.find({
     owner: { $exists: true, $in: [req.body.owner] },
@@ -25,7 +24,6 @@ exports.postOrder = catchAsync(async (req, res, next) => {
       data: {
         updateOrder,
       },
-      date: orderDate,
     });
   } else if (!flag) {
     const newOrderItem = await Order.create(req.body);
@@ -34,7 +32,6 @@ exports.postOrder = catchAsync(async (req, res, next) => {
       data: {
         newOrderItem,
       },
-      date: orderDate,
     });
 
     //const cart = await Cart.updateOne({owner:req.body.owner} , {})

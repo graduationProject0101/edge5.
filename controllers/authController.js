@@ -4,6 +4,7 @@ const catchAsync = require('./../utils/catchAsync');
 const jwt = require('jsonwebtoken');
 const AppError = require('./../utils/appError');
 const Cart = require('./../models/cartModel');
+const Favorite = require('./../models/favoriteModel');
 
 // assigning a token to user
 const asignToken = (id) => {
@@ -22,10 +23,16 @@ exports.signup = catchAsync(async (req, res, next) => {
     passwordChangedAt: req.body.passwordChangedAt,
   });
 
+  //user has a favorite list and a cart once he signs in
+  const newFavorite = await Favorite.create({
+    owner: newUser._id,
+    items: [],
+  });
   const newCart = await Cart.create({
     owner: newUser._id,
     items: [],
   });
+
   const token = asignToken(newUser._id);
 
   res.status(201).json({

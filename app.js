@@ -8,6 +8,7 @@ const userRouter = require('./routes/userRoutes');
 const cartRouter = require('./routes/cartRoutes');
 const akinRouter = require('./routes/akinRoutes');
 const orderRouter = require('./routes/orderRoutes');
+const favoriteRouter = require('./routes/favoriteRoutes');
 const cors = require('cors');
 const app = express();
 
@@ -30,6 +31,7 @@ app.use(function (req, res, next) {
     'Access-Control-Allow-Headers',
     'Origin, X-Requested-With, Content-Type, Accept, x-client-key, x-client-token, x-client-secret, Authorization'
   );
+  res.header('content-length');
   next();
 });
 
@@ -49,6 +51,7 @@ app.use('/api/v1/users', userRouter);
 app.use('/api/v1/cart', cartRouter);
 app.use('/api/v1/akin', akinRouter);
 app.use('/api/v1/order', orderRouter);
+app.use('/api/v1/favorite', favoriteRouter);
 
 // error handling if the url is not defined
 app.all('*', (req, res, next) => {

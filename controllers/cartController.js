@@ -13,7 +13,6 @@ exports.createCartItem = catchAsync(async (req, res) => {
     flag = false;
   }
   if (flag) {
-    console.log('msc');
     let updateCart = await Cart.findOneAndUpdate(
       { owner: req.body.owner },
       { $push: { items: req.body.items } }
