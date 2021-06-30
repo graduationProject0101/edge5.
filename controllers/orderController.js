@@ -50,7 +50,7 @@ exports.postOrder = catchAsync(async (req, res, next) => {
 
   let deleteCartItems = await Cart.updateOne(
     { owner: req.body.owner },
-    { $set: { itmes: [] } }
+    { $set: { itmes: Array[null] } }
   );
 });
 
