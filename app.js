@@ -31,7 +31,7 @@ app.use(function (req, res, next) {
     'Access-Control-Allow-Headers',
     'Origin, X-Requested-With, Content-Type, Accept, x-client-key, x-client-token, x-client-secret, Authorization'
   );
-  res.header('content-length');
+  res.header({ gzip: 'true' });
   next();
 });
 
