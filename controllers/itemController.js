@@ -31,6 +31,7 @@ exports.filterItems = catchAsync(async (req, res) => {
 
   if (filteredItems.length == 1) {
     const MetaData = req.body.MetaData;
+    //console.log(filteredItems[0].SubCategory);
     akin.activity.log(req.body.owner, filteredItems[0]._id, MetaData, 'view');
     akin, akin.run();
   }
