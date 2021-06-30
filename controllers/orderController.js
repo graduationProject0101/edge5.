@@ -27,14 +27,12 @@ exports.postOrder = catchAsync(async (req, res, next) => {
     });
   } else if (!flag) {
     const newOrderItem = await Order.create(req.body);
-    res.writeHead(200).status(200).json({
+    res.status(200).json({
       status: 'success',
       data: {
         newOrderItem,
       },
     });
-
-    //const cart = await Cart.updateOne({owner:req.body.owner} , {})
   } else {
     return next(new AppError('the cart has no items in it', '400'));
   }
@@ -62,9 +60,7 @@ exports.getOrder = catchAsync(async (req, res, next) => {
   if (order) {
     res.status(200).json({
       status: 'success',
-      data: {
-        order,
-      },
+      data: order,
     });
   } else {
     return next(new AppError('this user did not make any orders', '400'));
