@@ -46,13 +46,15 @@ exports.postOrder = catchAsync(async (req, res, next) => {
     );
     akin.run();
   }
-
-  let deleteCartItems = await Cart.updateOne(
-    { owner: req.body.owner },
-    { $set: { itmes: Array[null] } }
-  );
+  //deleting items in cart wehn making an order
+  let deleteCartItems = await Cart.findOne({ owner: req.body.owner });
+  for (let i = 0; i < deleteCartItems.items.length; i++) {
+    let deleteItems = await Cart.findOneAndUpdate(
+      { owner: req.body.owner },
+      { $pop: { items: 1 } }
+    );
+  }
 });
-
 exports.getOrder = catchAsync(async (req, res, next) => {
   const features = new APIFeatures(Order.findOne(), req.query).filter();
 

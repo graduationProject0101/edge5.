@@ -32,6 +32,11 @@ exports.likedItem = catchAsync(async (req, res, next) => {
       'favorite'
     );
     akin.run();
+  } else {
+    res.status(404).json({
+      message: 'this user is not signed up ',
+    });
+    return next(new AppError('User is not signed Up, please sig up', 404));
   }
 });
 
