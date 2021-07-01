@@ -36,14 +36,15 @@ exports.postOrder = catchAsync(async (req, res, next) => {
   } else {
     return next(new AppError('the cart has no items in it', '400'));
   }
-  for (let i = 0; i < req.body.orders[0].items.length; i++) {
+  const len = req.body.orders.length - 1;
+  for (let i = 0; i < req.body.orders[len].order.length; i++) {
     akin.activity.log(
       req.body.owner,
-      req.body.orders[0].items[i].itemId,
-      req.body.orders[0].items[i].SubCategory,
+      req.body.orders[len].order[i].itemId,
+      req.body.orders[len].order[i].SubCategory,
       'buy'
     );
-    akin.run;
+    akin.run();
   }
 
   let deleteCartItems = await Cart.updateOne(
