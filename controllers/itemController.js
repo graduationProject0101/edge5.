@@ -4,7 +4,7 @@ const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 const akin = require('@asymmetrik/akin');
 const Favorite = require('./../models/favoriteModel');
-// aliasing but not yet uset //TODO:
+// aliasing but not yet used //TODO:
 exports.aliasSales = (req, res, next) => {
   req.query.sort = 'discount';
   next();

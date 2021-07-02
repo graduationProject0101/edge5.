@@ -11,4 +11,7 @@ exports.getRecommendations = catchAsync(async (req, res) => {
     status: 'success',
     recommendations: recommendations,
   });
+  if(!recommendations){
+    return new AppError('No recommendations for this user yet' , 404);
+  }
 });
