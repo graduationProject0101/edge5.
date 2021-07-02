@@ -1,3 +1,5 @@
+const APIFeatures = require('../utils/apiFeatures');
+const AppError = require('../utils/appError');
 const User = require('./../models/userModel');
 const catchAsync = require('./../utils/catchAsync');
 
@@ -13,27 +15,16 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
     },
   });
 });
-exports.getUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not yet defined!',
-  });
-};
-exports.createUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not yet defined!',
-  });
-};
-exports.updateUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not yet defined!',
-  });
-};
-exports.deleteUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not yet defined!',
-  });
-};
+exports.getUser = catchAsync(async (req, res) => {
+  const features = new APIFeatures (User.find() , req.query).filter();
+  const user = await features.query;
+  if(!user){
+    return next(new AppError('User not found' , 404));
+  }else{
+    res.status(200).json({
+      status: 'success',
+      data:user,
+    });
+  }
+
+});

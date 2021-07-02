@@ -3,6 +3,7 @@ const APIFeatures = require('./../utils/apiFeatures');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 const akin = require('@asymmetrik/akin');
+const Favorite = require('./../models/favoriteModel');
 // aliasing but not yet uset //TODO:
 exports.aliasSales = (req, res, next) => {
   req.query.sort = 'discount';
@@ -72,7 +73,6 @@ exports.paginateItems = catchAsync(async (req, res) => {
 });
 
 exports.getItem = catchAsync(async (req, res, next) => {
-  // console.log(req.params.id);
   const item = await Item.findById(req.params.id);
 
   if (!item) {
