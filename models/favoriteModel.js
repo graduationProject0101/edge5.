@@ -10,11 +10,12 @@ const favoriteSchema = new mongoose.Schema({
         ref: 'Product',
       },
       itemName: { type: String },
-      images: { type: String },
-      color: { type: String },
-      size: { type: String },
+      images: { type: Array },
+      color: { type: Array },
+      size: { type: Array },
       seller: { type: String },
       SubCategory: { type: String },
+      price:{type:Number}
     },
   ],
 });
