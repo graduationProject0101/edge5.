@@ -29,21 +29,37 @@ exports.getAllItems = catchAsync(async (req, res, next) => {
 exports.filterItems = catchAsync(async (req, res) => {
   const features = new APIFeatures(Item.find(), req.query).filter().sort();
   const filteredItems = await features.query;
-
+  let favoriteFlag = false;
   if (filteredItems.length == 1) {
-    const MetaData = req.body.MetaData;
-    //console.log(filteredItems[0].SubCategory);
-    akin.activity.log(req.body.owner, filteredItems[0]._id, MetaData, 'view');
-    akin, akin.run();
-  }
+    //favorite check to keep the state
+    let favorite = await Favorite.findOne({ owner: req.body.owner });
 
-  res.status(200).json({
-    status: 'success',
-    results: filteredItems.length,
-    data: {
-      filteredItems,
-    },
-  });
+    for (let i = 0; i < favorite.items.length; i++) {
+      if (
+        filteredItems[0]._id.toString() == favorite.items[i].itemId.toString()
+      ) {
+        console.log(2);
+        favoriteFlag = true;
+      }
+    }
+
+    res.status(200).json({
+      status: 'success',
+      results: filteredItems.length,
+      favorite: favoriteFlag,
+      data: {
+        filteredItems,
+      },
+    });
+  } else {
+    res.status(200).json({
+      status: 'success',
+      results: filteredItems.length,
+      data: {
+        filteredItems,
+      },
+    });
+  }
 });
 
 exports.paginateItems = catchAsync(async (req, res) => {

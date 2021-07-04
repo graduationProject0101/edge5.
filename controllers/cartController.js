@@ -5,43 +5,35 @@ const AppError = require('./../utils/appError');
 const akin = require('@asymmetrik/akin');
 
 exports.createCartItem = catchAsync(async (req, res) => {
-  let flag = true;
-  const cartCheck = await Cart.find({
-    owner: { $exists: true, $in: [req.body.owner] },
-  });
-  if (cartCheck.length == 0) {
-    flag = false;
-  }
-  if (flag) {
-    let updateCart = await Cart.findOneAndUpdate(
-      { owner: req.body.owner },
-      { $push: { items: req.body.items } }
-    );
-    res.status(200).json({
-      status: 'success',
-      data: {
-        item: updateCart,
-      },
-    });
+  // let cart = await Cart.find({ owner: req.body.owner });
+  // //console.log(req.body.items[0]['itemdId'].toString());
+  // for (let i = 0; i < cart[0].items.length; i++) {
+  //   if (req.body.items[0]['itemdId'] == cart[0].items[i].itemId.toString()) {
+  //     let updateQty = await Cart.findOneAndUpdate(
+  //       { owner: req.body.owner, items: req.body.items[0]['itemId'] },
+  //       { $set: { qty: 4 } }
+  //     );
+  //   }
+  // }
+  let updateCart = await Cart.findOneAndUpdate(
+    { owner: req.body.owner },
+    { $push: { items: req.body.items } }
+  );
 
-    akin.activity.log(
-      req.body.owner,
-      req.body.items[0].itemId,
-      req.body.items[0].SubCategory,
-      'cart'
-    );
-    akin.run();
-  } else {
-    const newCartItem = await Cart.create(req.body);
-    res.status(200).json({
-      status: 'success',
-      data: {
-        item: newCartItem,
-      },
-    });
-    akin.activity.log(req.body.owner, req.body.items[0].itemId, 'cart');
-    akin.run();
-  }
+  akin.activity.log(
+    req.body.owner,
+    req.body.items[0].itemId,
+    req.body.items[0].SubCategory,
+    'cart'
+  );
+  akin.run();
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      item: updateCart,
+    },
+  });
 });
 
 exports.getCart = catchAsync(async (req, res, next) => {
@@ -86,7 +78,15 @@ exports.getQuantity = catchAsync(async (req, res, next) => {
 exports.deleteCartItem = catchAsync(async (req, res) => {
   let updateCart = await Cart.findOneAndUpdate(
     { owner: req.body.owner },
-    { $pull: { items: { itemId: req.body.itemId } } }
+    {
+      $pull: {
+        items: {
+          itemId: req.body.itemId,
+          color: req.body.color,
+          size: req.body.size,
+        },
+      },
+    }
   );
 
   res.status(204).json({
