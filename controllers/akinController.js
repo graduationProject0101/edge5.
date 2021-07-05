@@ -7,7 +7,10 @@ const akin = require('@asymmetrik/akin');
 exports.getRecommendations = catchAsync(async (req, res) => {
   let recommendedList = [];
   const sampledRecommendations =
-    await akin.recommendation.sampleRecommendationsForUser(req.body.owner, 8);
+    await akin.recommendation.sampleRecommendationsForUser(
+      req.body.owner,
+      req.body.samples
+    );
 
   if (!sampledRecommendations) {
     return new AppError('No recommendations for this user yet', 404);
