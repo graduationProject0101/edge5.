@@ -16,15 +16,15 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
   });
 });
 exports.getUser = catchAsync(async (req, res) => {
-  const features = new APIFeatures (User.find() , req.query).filter();
+  const features = new APIFeatures(User.find(), req.query).filter();
   const user = await features.query;
-  if(!user){
-    return next(new AppError('User not found' , 404));
-  }else{
+  console.log(user);
+  if (!user) {
+    return next(new AppError('User not found', 404));
+  } else {
     res.status(200).json({
       status: 'success',
-      data:user,
+      data: user,
     });
   }
-
 });

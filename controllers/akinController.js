@@ -5,13 +5,24 @@ const AppError = require('./../utils/appError');
 const akin = require('@asymmetrik/akin');
 
 exports.getRecommendations = catchAsync(async (req, res) => {
-  const recommendations =
-    await akin.recommendation.getAllRecommendationsForUser(req.body.owner);
+  let recommendedList = [];
+  const sampledRecommendations =
+    await akin.recommendation.sampleRecommendationsForUser(req.body.owner, 8);
+
+  if (!sampledRecommendations) {
+    return new AppError('No recommendations for this user yet', 404);
+  }
+
+  for (let i = 0; i < sampledRecommendations.length; i++) {
+    const recommendedItems = await Item.findById(
+      sampledRecommendations[i].item
+    );
+    recommendedList.push(recommendedItems);
+  }
+
   res.status(200).json({
     status: 'success',
-    recommendations: recommendations,
+    length: sampledRecommendations.length,
+    recommendations: recommendedList,
   });
-  if(!recommendations){
-    return new AppError('No recommendations for this user yet' , 404);
-  }
 });
