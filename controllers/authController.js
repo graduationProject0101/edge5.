@@ -27,6 +27,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     res.status(201).json({
       status: 'success',
       token,
+      role: 'admin',
       data: {
         user: newUser,
       },
@@ -52,6 +53,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     res.status(201).json({
       status: 'success',
       token,
+      role: 'user',
       data: {
         user: newUser,
       },
@@ -78,10 +80,12 @@ exports.login = catchAsync(async (req, res, next) => {
 
   // 3)If everything is ok, send token to client
 
+  const role = user.role;
   const token = asignToken(user._id);
   res.status(200).json({
     status: 'success',
     token,
+    role: role,
   });
 });
 
