@@ -14,34 +14,59 @@ const asignToken = (id) => {
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
-  const newUser = await User.create({
-    name: req.body.name,
-    email: req.body.email,
-    role: req.body.role,
-    password: req.body.password,
-    passwordConfirm: req.body.passwordConfirm,
-    passwordChangedAt: req.body.passwordChangedAt,
-  });
+  if (req.body.email.includes('@edge')) {
+    const newUser = await User.create({
+      name: req.body.name,
+      email: req.body.email,
+      role: 'admin',
+      password: req.body.password,
+      passwordConfirm: req.body.passwordConfirm,
+      passwordChangedAt: req.body.passwordChangedAt,
+    });
+    const token = asignToken(newUser._id);
+    const newFavorite = await Favorite.create({
+      owner: newUser._id,
+      items: [],
+    });
+    const newCart = await Cart.create({
+      owner: newUser._id,
+      items: [],
+    });
+    res.status(201).json({
+      status: 'success',
+      token,
+      data: {
+        user: newUser,
+      },
+    });
+  } else {
+    const newUser = await User.create({
+      name: req.body.name,
+      email: req.body.email,
+      role: req.body.role,
+      password: req.body.password,
+      passwordConfirm: req.body.passwordConfirm,
+      passwordChangedAt: req.body.passwordChangedAt,
+    });
+    const token = asignToken(newUser._id);
+    const newFavorite = await Favorite.create({
+      owner: newUser._id,
+      items: [],
+    });
+    const newCart = await Cart.create({
+      owner: newUser._id,
+      items: [],
+    });
+    res.status(201).json({
+      status: 'success',
+      token,
+      data: {
+        user: newUser,
+      },
+    });
+  }
 
   //user has a favorite list and a cart once he signs in
-  const newFavorite = await Favorite.create({
-    owner: newUser._id,
-    items: [],
-  });
-  const newCart = await Cart.create({
-    owner: newUser._id,
-    items: [],
-  });
-
-  const token = asignToken(newUser._id);
-
-  res.status(201).json({
-    status: 'success',
-    token,
-    data: {
-      user: newUser,
-    },
-  });
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -117,5 +142,3 @@ exports.restrictTo = (...roles) => {
     next();
   };
 };
-
-

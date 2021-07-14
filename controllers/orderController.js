@@ -69,3 +69,14 @@ exports.getOrder = catchAsync(async (req, res, next) => {
     return next(new AppError('this user did not make any orders', '400'));
   }
 });
+
+exports.getAllOrders = catchAsync(async (req, res) => {
+  const allOrders = await Order.find();
+  res.status(200).json({
+    status: 'success',
+    orders: allOrders.length,
+    data: {
+      allOrders,
+    },
+  });
+});
