@@ -14,7 +14,7 @@ const asignToken = (id) => {
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
-  if (req.body.email.includes('@edge')) {
+  if (req.body.email.includes('@edge.com')) {
     const newUser = await User.create({
       name: req.body.name,
       email: req.body.email,
@@ -24,14 +24,6 @@ exports.signup = catchAsync(async (req, res, next) => {
       passwordChangedAt: req.body.passwordChangedAt,
     });
     const token = asignToken(newUser._id);
-    const newFavorite = await Favorite.create({
-      owner: newUser._id,
-      items: [],
-    });
-    const newCart = await Cart.create({
-      owner: newUser._id,
-      items: [],
-    });
     res.status(201).json({
       status: 'success',
       token,
