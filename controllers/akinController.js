@@ -17,7 +17,8 @@ exports.getRecommendations = catchAsync(async (req, res) => {
     const randomItems = getRandom(Items, req.body.samples);
     res.status(200).json({
       status: 'success',
-      items: randomItems,
+      length: randomItems.length,
+      recommendations: randomItems,
     });
   } else {
     for (let i = 0; i < sampledRecommendations.length; i++) {
